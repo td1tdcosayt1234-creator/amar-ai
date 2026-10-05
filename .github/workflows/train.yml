@@ -1,0 +1,27 @@
+name: train
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_iters:
+        description: "Training iterations"
+        default: "1500"
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Train
+        run: MAX_ITERS=${{ github.event.inputs.max_iters }} EVAL_EVERY=250 python train.py
+      - name: Upload model
+        uses: actions/upload-artifact@v4
+        with:
+          name: model
+          path: model.pt
