@@ -12,8 +12,8 @@ from mini_gpt import MiniGPT
 # ---- settings ----
 DATA_FILE = "data.txt"
 OUT_FILE = "model.pt"
-BLOCK_SIZE = 128
-BATCH_SIZE = 32
+BLOCK_SIZE = int(os.environ.get("BLOCK_SIZE", 256))
+BATCH_SIZE = int(os.environ.get("BATCH_SIZE", 32))
 N_EMBD = 256
 N_HEAD = 8
 N_LAYER = 6
