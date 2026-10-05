@@ -10,8 +10,8 @@ import torch
 from mini_gpt import MiniGPT
 
 # ---- settings ----
-DATA_FILE = "data.txt"
-OUT_FILE = "model.pt"
+DATA_FILE = os.environ.get("DATA_FILE", "data.txt")
+OUT_FILE = os.environ.get("OUT_FILE", "model.pt")
 BLOCK_SIZE = int(os.environ.get("BLOCK_SIZE", 256))
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", 32))
 N_EMBD = 256

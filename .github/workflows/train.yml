@@ -3,6 +3,9 @@ name: train
 on:
   workflow_dispatch:
     inputs:
+      subject:
+        description: "Subject to train (coding/bangla/english)"
+        default: "bangla"
       max_iters:
         description: "Training iterations"
         default: "1500"
@@ -18,10 +21,12 @@ jobs:
           python-version: "3.12"
       - name: Install deps
         run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Build subject data
+        run: python make_data.py ${{ github.event.inputs.subject }}
       - name: Train
-        run: MAX_ITERS=${{ github.event.inputs.max_iters }} EVAL_EVERY=250 python train.py
+        run: DATA_FILE=data_${{ github.event.inputs.subject }}.txt OUT_FILE=model_${{ github.event.inputs.subject }}.pt MAX_ITERS=${{ github.event.inputs.max_iters }} EVAL_EVERY=250 python train.py
       - name: Upload model
         uses: actions/upload-artifact@v4
         with:
-          name: model
-          path: model.pt
+          name: model-${{ github.event.inputs.subject }}
+          path: model_${{ github.event.inputs.subject }}.pt
